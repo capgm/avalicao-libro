@@ -71,19 +71,25 @@ class AlunoService
     {
 
         try {
-            return  DB::table('alunos AS a')
-                ->select(
-                    'c.titulo AS curso',
-                    'a.sexo',
-                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) < 15 THEN 1 ELSE 0 END) AS menor_que_15_anos'),
-                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 15 AND 18 THEN 1 ELSE 0 END) AS entre_15_e_18_anos'),
-                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 19 AND 24 THEN 1 ELSE 0 END) AS entre_19_e_24_anos'),
-                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 25 AND 30 THEN 1 ELSE 0 END) AS entre_25_e_30_anos'),
-                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) > 30 THEN 1 ELSE 0 END) AS maior_que_30_anos')
-                )
-                ->join('aluno_curso AS ac', 'a.id', '=', 'ac.aluno_id')
-                ->join('cursos AS c', 'ac.curso_id', '=', 'c.id')
-                ->groupBy('c.titulo', 'a.sexo');
+
+            return DB::select('
+    SELECT
+        c.titulo AS curso,
+        a.sexo,
+        SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) < 15 THEN 1 ELSE 0 END) AS menor_que_15_anos,
+        SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 15 AND 18 THEN 1 ELSE 0 END) AS entre_15_e_18_anos,
+        SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 19 AND 24 THEN 1 ELSE 0 END) AS entre_19_e_24_anos,
+        SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 25 AND 30 THEN 1 ELSE 0 END) AS entre_25_e_30_anos,
+        SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) > 30 THEN 1 ELSE 0 END) AS maior_que_30_anos
+    FROM
+        alunos AS a
+    JOIN
+        aluno_curso AS ac ON a.id = ac.aluno_id
+    JOIN
+        cursos AS c ON ac.curso_id = c.id
+    GROUP BY
+        c.titulo, a.sexo
+');
         } catch (\Exception $e) {
             return $e;
         }
