@@ -20,7 +20,7 @@
     <button type="submit">Consultar aluno por nome e e-mail</button>
 </form>
 
-<form method="GET" action="{{ url('/alunos/relatorio')}}">
+<form method="GET" action="{{ url('/relatorio')}}">
     <button type="submit">Consultar total alunos for faixa etaria e curso</button>
 </form>
 

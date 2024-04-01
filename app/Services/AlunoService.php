@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Aluno;
 use Illuminate\Support\Facades\DB;
+use PDO;
+use PDOException;
 
 class AlunoService
 {
@@ -24,7 +26,7 @@ class AlunoService
         return Aluno::findOrFail($id);
     }
 
-    public function atualizarAluno($dados,$id)
+    public function atualizarAluno($dados, $id)
     {
         $aluno = Aluno::findOrFail($id);
 
@@ -54,35 +56,36 @@ class AlunoService
         return Aluno::all();
     }
 
-    public function consultaNomeEmail($nome, $email){
+    public function consultaNomeEmail($nome, $email)
+    {
 
         $nomeDecodificado = urldecode($nome);
         $emailDecodificado = urldecode($email);
 
         return  Aluno::where('nome', '=', $nomeDecodificado)
-        ->where('email', '=', $emailDecodificado)
-        ->get();
+            ->where('email', '=', $emailDecodificado)
+            ->get();
     }
 
-    public function relatorio(){
-       try{
-        return  DB::table('alunos AS a')
-        ->select(
-            'c.titulo AS curso',
-            'a.sexo',
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) < 15 THEN 1 ELSE 0 END) AS menor_que_15_anos'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 15 AND 18 THEN 1 ELSE 0 END) AS entre_15_e_18_anos'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 19 AND 24 THEN 1 ELSE 0 END) AS entre_19_e_24_anos'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 25 AND 30 THEN 1 ELSE 0 END) AS entre_25_e_30_anos'),
-            DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) > 30 THEN 1 ELSE 0 END) AS maior_que_30_anos')
-        )
-        ->join('aluno_curso AS ac', 'a.id', '=', 'ac.aluno_id')
-        ->join('cursos AS c', 'ac.curso_id', '=', 'c.id')
-        ->groupBy('c.titulo', 'a.sexo')
-        ->get();
-        }catch(\Exception $e){
+    public function relatorio()
+    {
+
+        try {
+            return  DB::table('alunos AS a')
+                ->select(
+                    'c.titulo AS curso',
+                    'a.sexo',
+                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) < 15 THEN 1 ELSE 0 END) AS menor_que_15_anos'),
+                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 15 AND 18 THEN 1 ELSE 0 END) AS entre_15_e_18_anos'),
+                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 19 AND 24 THEN 1 ELSE 0 END) AS entre_19_e_24_anos'),
+                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) BETWEEN 25 AND 30 THEN 1 ELSE 0 END) AS entre_25_e_30_anos'),
+                    DB::raw('SUM(CASE WHEN TIMESTAMPDIFF(YEAR, a.data_nascimento, CURDATE()) > 30 THEN 1 ELSE 0 END) AS maior_que_30_anos')
+                )
+                ->join('aluno_curso AS ac', 'a.id', '=', 'ac.aluno_id')
+                ->join('cursos AS c', 'ac.curso_id', '=', 'c.id')
+                ->groupBy('c.titulo', 'a.sexo');
+        } catch (\Exception $e) {
             return $e;
         }
     }
 }
-

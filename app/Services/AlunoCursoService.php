@@ -58,21 +58,11 @@ class AlunoCursoService
     {
 
         try {
-            // Encontre o registro que você deseja deletar
-            $registro = AlunoCurso::where('aluno_id',  $aluno_id)
-                ->where('curso_id',$curso_id)
-                ->first();
-
-            if ($registro) {
-                // Deleta o registro encontrado
-                $registro->delete();
-                return response()->json(['mensagem' => 'Registro deletado com sucesso!'], 200);
-            } else {
-                return response()->json(['error' => 'Registro não encontrado'], 404);
-            }
+            AlunoCurso::deleteRecord($aluno_id, $curso_id);
+            return response()->json(['mensagem' => 'Registro deletado com sucesso!'], 200);
         } catch (\Exception $e) {
 
-            return response()->json(['error' => $e, 'trace' => $e, 'aluno' => $aluno_id, 'curso' => $curso_id, 'aluno_curso' => $registro, 'mensagem_erro' => $e->getMessage()], 404);
+            return response()->json(['error' => $e, $e->getMessage()], 404);
         }
     }
 }

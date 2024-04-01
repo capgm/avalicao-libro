@@ -2,26 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AlunoCurso extends Model
 {
 
-    use HasFactory;
-
     protected $table = 'aluno_curso';
+    protected $primaryKey = ['aluno_id', 'curso_id']; // Define uma chave primária composta
+    public $incrementing = false; // Indica que a chave primária não é autoincrementável
 
-    public static function index()
+    public static function deleteRecord($aluno_id, $curso_id)
     {
-        return self::all();
-    }
+        // Utilize a cláusula where para encontrar e excluir o registro diretamente
+        $deleted = self::where('aluno_id', $aluno_id)
+            ->where('curso_id', $curso_id)
+            ->delete();
 
-    public static function show($id)
-    {
-        return self::find($id);
+        return $deleted; // Retorna true se um registro foi excluído, false caso contrário
     }
-
-    protected $fillable = ['aluno_id', 'curso_id'];
-    public $timestamps = true;
 }

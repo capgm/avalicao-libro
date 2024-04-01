@@ -75,7 +75,7 @@ class CursoController extends Controller
             // Retornar o aluno como JSON
             return response()->json($aluno, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Aluno não encontrado'], 404);
+            return response()->json(['error' => 'Curso não encontrado'], 404);
         }
     }
 
@@ -90,7 +90,7 @@ class CursoController extends Controller
             // Retornar o aluno como JSON
             return response()->json($aluno, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Aluno não encontrado'], 404);
+            return response()->json(['error' => 'Curso não encontrado'], 404);
         }
     }
 }

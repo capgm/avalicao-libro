@@ -34,7 +34,7 @@ Route::get('/alunos', [AlunoController::class, 'show']);
 Route::put('/alunos/{id}', [AlunoController::class, 'update']);
 Route::delete('/alunos/{id}', [AlunoController::class, 'destroy']);
 Route::get('/alunos/consulta/{nome}/{email}', [AlunoController::class, 'consulta']);
-Route::get('/alunos/relatorio', [AlunoController::class, 'relatorio']);
+Route::get('/relatorio', [AlunoController::class, 'relatorio']);
 
 // Curso
 Route::get('/cursos/{id}', [CursoController::class, 'index']);
@@ -50,3 +50,4 @@ Route::post('/aluno_curso', [AlunoCursoController::class, 'store']);
 Route::get('/aluno_curso', [AlunoCursoController::class, 'show']);
 Route::put('/aluno_curso/{aluno_id}/{curso_id}', [AlunoCursoController::class, 'update']);
 Route::delete('/aluno_curso/{aluno_id}/{curso_id}', [AlunoCursoController::class, 'destroy']);
+

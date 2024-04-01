@@ -47,6 +47,7 @@ class AlunoController extends Controller
     {
 
         try {
+
             $relatorio = $this->alunoService->relatorio();
             // Retornar o aluno como JSON
             return response()->json($relatorio, 200);
